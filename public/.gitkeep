@@ -1,0 +1,3 @@
+# Keeps the public/ directory present so the Dockerfile's
+# `COPY /app/public ./public` step doesn't fail on a fresh checkout.
+# Next.js serves static assets placed here at the site root.

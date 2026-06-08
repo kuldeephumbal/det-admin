@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Bring Inter via Google Fonts — kept here rather than in a layout component
+   so it covers Server Components and Client Components identically. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: 248 250 252;
+  --fg: 15 23 42;
+
+  --brand-from: 99 102 241;   /* indigo-500  */
+  --brand-to:   139 92 246;   /* violet-500  */
+  --brand-glow: 99 102 241;
+
+  --surface: 255 255 255;
+  --surface-border: 226 232 240;     /* slate-200 */
+  --surface-subtle: 241 245 249;     /* slate-100 */
+}
+
+.dark {
+  --bg: 2 6 23;
+  --fg: 241 245 249;
+  --surface: 15 23 42;
+  --surface-border: 30 41 59;
+  --surface-subtle: 30 41 59;
+}
+
+html,
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--fg));
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-feature-settings: 'cv11', 'ss01', 'ss03';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Native focus rings can look harsh on a polished UI. Tone them down and
+   make every focusable element get a consistent indigo ring. */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(var(--surface)), 0 0 0 4px rgba(99, 102, 241, 0.55);
+  border-radius: 8px;
+}
+
+/* Scrollbars — slim, brand-tinted, only visible on hover for the scrolling area. */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.18);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.35);
+  background-clip: content-box;
+  border: 2px solid transparent;
+}
+
+@layer components {
+  /* Reusable surface — every card-ish thing in the admin shares this base. */
+  .surface {
+    @apply bg-white border border-slate-200 rounded-2xl shadow-card;
+  }
+  .surface-hover {
+    @apply transition-shadow duration-200 hover:shadow-card-hover;
+  }
+
+  /* Subtle gradient text used on the brand wordmark in the sidebar. */
+  .text-gradient-brand {
+    background-image: linear-gradient(135deg, rgb(var(--brand-from)) 0%, rgb(var(--brand-to)) 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+  }
+
+  /* Primary button used by the dashboard / login / mutating actions. */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl
+           text-sm font-semibold text-white
+           bg-gradient-to-br from-brand-500 to-brand-700
+           shadow-glow-brand
+           transition-all duration-200
+           hover:brightness-110 hover:shadow-[0_10px_28px_-10px_rgba(99,102,241,0.7)]
+           active:scale-[0.98]
+           disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl
+           text-sm font-medium text-slate-700
+           border border-slate-200 bg-white
+           transition-colors duration-150
+           hover:bg-slate-50 hover:border-slate-300
+           disabled:opacity-60;
+  }
+
+  /* Skeleton shimmer — drop on any block while data is loading. */
+  .skeleton {
+    background-image: linear-gradient(90deg,
+      rgba(148,163,184,0.10) 0%,
+      rgba(148,163,184,0.22) 50%,
+      rgba(148,163,184,0.10) 100%);
+    background-size: 200% 100%;
+    @apply animate-shimmer rounded-md;
+  }
+
+  /* Stagger helper. Apply data-stagger on a parent and the children get
+     animation-delays based on their index — handy for list reveals. */
+  [data-stagger] > *:nth-child(1) { animation-delay: 40ms; }
+  [data-stagger] > *:nth-child(2) { animation-delay: 80ms; }
+  [data-stagger] > *:nth-child(3) { animation-delay: 120ms; }
+  [data-stagger] > *:nth-child(4) { animation-delay: 160ms; }
+  [data-stagger] > *:nth-child(5) { animation-delay: 200ms; }
+  [data-stagger] > *:nth-child(6) { animation-delay: 240ms; }
+  [data-stagger] > *:nth-child(7) { animation-delay: 280ms; }
+  [data-stagger] > *:nth-child(8) { animation-delay: 320ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
