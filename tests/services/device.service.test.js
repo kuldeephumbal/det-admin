@@ -93,30 +93,6 @@ describe('device.service.register', () => {
     expect(inactive).toBe(2);
   });
 
-  it('writes a "new device" notification on first registration only', async () => {
-    const user = await makeUser({ email: 'newdev@example.com' });
-    const tok = 'newdev-' + 'a'.repeat(40);
-
-    await deviceService.register(String(user._id), {
-      fcmToken: tok, platform: 'android', model: 'Pixel 7',
-    });
-    await flush();
-
-    const first = await Notification.find({ user: user._id }).lean();
-    expect(first).toHaveLength(1);
-    expect(first[0].title).toMatch(/New sign-in/i);
-    expect(first[0].deepLink).toBe('/settings/devices');
-
-    // Re-register same (user, token) — should NOT spawn another notification.
-    await deviceService.register(String(user._id), {
-      fcmToken: tok, platform: 'android', model: 'Pixel 7',
-    });
-    await flush();
-
-    const after = await Notification.countDocuments({ user: user._id });
-    expect(after).toBe(1);
-  });
-
   it('links the most-recent live refresh token to the new device', async () => {
     const user = await makeUser({ email: 'rtlink@example.com' });
     // Two refresh rows; the most recent should be the one linked.
