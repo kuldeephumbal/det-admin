@@ -43,6 +43,9 @@ const baseConfig = {
       'plaid',
       '@google-cloud/vision',
       '@aws-sdk/client-s3',
+      // SMS invites for split-expenses — optional, lazy-required only
+      // when Twilio creds are present.
+      'twilio',
     ],
   },
   async headers() {
